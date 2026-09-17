@@ -6,7 +6,7 @@ format = "$directory$os$git_branch$git_status$character"
 disabled = false
 
 [os.symbols]
-Windows = "🪟 "
+Windows = "☠️ "
 
 [directory]
 truncation_length = 3

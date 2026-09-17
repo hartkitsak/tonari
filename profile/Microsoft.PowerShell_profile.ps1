@@ -1,9 +1,16 @@
-function Resolve-CommandPath {
+function Resolve-ExecutablePath {
     param([string]$Name)
     $path = (Get-Command $Name -ErrorAction SilentlyContinue).Source
     if (-not $path) { return $null }
-    $item = Get-Item $path -Force -ErrorAction SilentlyContinue
-    if ($item.LinkType) { return $item.Target }
+    $item = Get-Item -LiteralPath $path -Force -ErrorAction SilentlyContinue
+    if (-not $item) { return $null }
+    # Symlink-like links may dangle after a winget update/uninstall — verify the target exists.
+    # HardLinks and regular files are directly usable as-is.
+    if ($item.LinkType -in @('SymbolicLink', 'AppExeCLink')) {
+        $target = @($item.Target)[0]
+        if ($target -and (Test-Path -LiteralPath $target -PathType Leaf)) { return $target }
+        return $null
+    }
     return $path
 }
 
@@ -15,7 +22,7 @@ if ($Host.Name -eq "ConsoleHost" -and $Host.UI.SupportsVirtualTerminal) {
     }
 }
 
-$zoxidePath = Resolve-CommandPath zoxide
+$zoxidePath = Resolve-ExecutablePath zoxide
 if ($zoxidePath) {
     Invoke-Expression (& { (& $zoxidePath init powershell | Out-String) })
 }
@@ -28,14 +35,14 @@ if (Get-Module -ListAvailable -Name PSFzf) {
 $env:FZF_DEFAULT_OPTS = "--height=40% --layout=reverse --border --inline-info"
 
 function ff {
-    $rgPath = Resolve-CommandPath rg
-    $fzfPath = Resolve-CommandPath fzf
+    $rgPath = Resolve-ExecutablePath rg
+    $fzfPath = Resolve-ExecutablePath fzf
     if (-not $rgPath -or -not $fzfPath) { return }
     & $rgPath --files --hidden --glob '!.git' | & $fzfPath
 }
 
 function cdf {
-    $fzfPath = Resolve-CommandPath fzf
+    $fzfPath = Resolve-ExecutablePath fzf
     if (-not $fzfPath) { return }
     Set-Location (Get-ChildItem -Directory -Recurse -Depth 4 -ErrorAction SilentlyContinue | ForEach-Object FullName | & $fzfPath)
 }
@@ -68,15 +75,15 @@ function gp { git push @args }
 function gst { git status @args }
 
 function gco {
-    git checkout @Args
+    git checkout @args
 }
 
 function gcmsg {
-    git commit -m $Args
+    git commit -m @args
 }
 
 function gl {
-    git log --oneline --graph --decorate @Args
+    git log --oneline --graph --decorate @args
 }
 
 if (Get-Command nvim -ErrorAction SilentlyContinue) {
