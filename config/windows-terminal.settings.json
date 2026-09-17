@@ -46,7 +46,10 @@
     {
         "defaults": 
         {
-            "opacity": 90,
+            "colorScheme": "Color Scheme 11",
+            "elevate": true,
+            "experimental.retroTerminalEffect": true,
+            "opacity": 50,
             "useAcrylic": true
         },
         "list": 
@@ -54,7 +57,7 @@
             {
                 "commandline": "%SystemRoot%\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
                 "guid": "{61c54bbd-c2c6-5271-96e7-009a87ff44bf}",
-                "hidden": true,
+                "hidden": false,
                 "name": "Windows PowerShell"
             },
             {
@@ -65,7 +68,7 @@
             },
             {
                 "guid": "{b453ae62-4e3d-5e58-b989-0a998ec441b8}",
-                "hidden": true,
+                "hidden": false,
                 "name": "Azure Cloud Shell",
                 "source": "Windows.Terminal.Azure"
             },
@@ -78,6 +81,31 @@
             }
         ]
     },
-    "schemes": [],
+    "schemes":
+    [
+        {
+            "background": "#000014",
+            "black": "#0C0C0C",
+            "blue": "#0000FF",
+            "brightBlack": "#575757",
+            "brightBlue": "#3B78FF",
+            "brightCyan": "#61D6D6",
+            "brightGreen": "#119609",
+            "brightPurple": "#E200ED",
+            "brightRed": "#FF0064",
+            "brightWhite": "#F2F2F2",
+            "brightYellow": "#D7D900",
+            "cursorColor": "#FFFFFF",
+            "cyan": "#00A4FF",
+            "foreground": "#00E1FF",
+            "green": "#00FF00",
+            "name": "Color Scheme 11",
+            "purple": "#6100D4",
+            "red": "#FF0000",
+            "selectionBackground": "#FFFFFF",
+            "white": "#CCCCCC",
+            "yellow": "#FFFF00"
+        }
+    ],
     "themes": []
 }
